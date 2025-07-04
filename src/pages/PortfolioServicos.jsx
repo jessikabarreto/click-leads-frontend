@@ -12,7 +12,8 @@ const PortfolioServicos = ({ categoria = null }) => {
     descricao: '',
     preco_base: '',
     categoria: categoria || 'seo_sites',
-    detalhes: {}
+    detalhes: {},
+    status: 'ativo'
   });
 
   const categorias = [
@@ -43,7 +44,7 @@ const PortfolioServicos = ({ categoria = null }) => {
     try {
       const endpoint = editingServico ? `/portfolio-servicos/${editingServico.id}` : '/portfolio-servicos';
       const method = editingServico ? 'PUT' : 'POST';
-      
+
       await apiRequest(endpoint, {
         method,
         body: JSON.stringify({
@@ -60,7 +61,8 @@ const PortfolioServicos = ({ categoria = null }) => {
         descricao: '',
         preco_base: '',
         categoria: categoria || 'seo_sites',
-        detalhes: {}
+        detalhes: {},
+        status: 'ativo'
       });
     } catch (error) {
       console.error('Erro ao salvar serviço:', error);
@@ -75,7 +77,8 @@ const PortfolioServicos = ({ categoria = null }) => {
       descricao: servico.descricao || '',
       preco_base: servico.preco_base ? servico.preco_base.toString() : '',
       categoria: servico.categoria,
-      detalhes: servico.detalhes || {}
+      detalhes: servico.detalhes || {},
+      status: servico.status || 'ativo'
     });
     setShowModal(true);
   };
@@ -127,22 +130,15 @@ const PortfolioServicos = ({ categoria = null }) => {
     <div className="page-container">
       <div className="page-header">
         <div className="page-title-section">
-          <h1 className="page-title">
-            {pageTitle}
-          </h1>
+          <h1 className="page-title">{pageTitle}</h1>
           <p className="page-subtitle">
             {categoria 
               ? `Gerencie os serviços de ${getCategoriaInfo(categoria).label.toLowerCase()}`
-              : 'Gerencie todos os serviços oferecidos pela agência'
-            }
+              : 'Gerencie todos os serviços oferecidos pela agência'}
           </p>
         </div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowModal(true)}
-        >
-          <span>+</span>
-          Novo Serviço
+        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+          <span>+</span> Novo Serviço
         </button>
       </div>
 
@@ -167,16 +163,13 @@ const PortfolioServicos = ({ categoria = null }) => {
             <div className="empty-icon">🎨</div>
             <h3>Nenhum serviço encontrado</h3>
             <p>Comece adicionando serviços ao seu portfólio</p>
-            <button 
-              className="btn btn-primary"
-              onClick={() => setShowModal(true)}
-            >
+            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
               Adicionar Serviço
             </button>
           </div>
         ) : (
           <div className="data-grid">
-            {filteredServicos.map((servico) => {
+            {filteredServicos.map(servico => {
               const catInfo = getCategoriaInfo(servico.categoria);
               return (
                 <div key={servico.id} className="data-card service-card">
@@ -186,72 +179,44 @@ const PortfolioServicos = ({ categoria = null }) => {
                       <h3 className="card-title">{servico.nome}</h3>
                     </div>
                     <div className="card-actions">
-                      <button 
-                        className="btn-icon"
-                        onClick={() => handleEdit(servico)}
-                        title="Editar"
-                      >
-                        ✏️
-                      </button>
-                      <button 
-                        className="btn-icon"
-                        onClick={() => handleDelete(servico.id)}
-                        title="Excluir"
-                      >
-                        🗑️
-                      </button>
+                      <button className="btn-icon" onClick={() => handleEdit(servico)} title="Editar">✏️</button>
+                      <button className="btn-icon" onClick={() => handleDelete(servico.id)} title="Excluir">🗑️</button>
                     </div>
                   </div>
-                  
+
                   <div className="card-content">
                     <div className="service-category">
-                      <span className={`category-badge ${servico.categoria}`}>
-                        {catInfo.label}
-                      </span>
+                      <span className={`category-badge ${servico.categoria}`}>{catInfo.label}</span>
                     </div>
-                    
+
                     {servico.descricao && (
-                      <div className="service-description">
-                        {servico.descricao}
-                      </div>
+                      <div className="service-description">{servico.descricao}</div>
                     )}
-                    
+
                     <div className="service-price">
                       <span className="price-label">Preço Base:</span>
-                      <span className={`price-value ${servico.preco_base ? 'defined' : 'undefined'}`}>
-                        {formatCurrency(servico.preco_base)}
-                      </span>
+                      <span className={`price-value ${servico.preco_base ? 'defined' : 'undefined'}`}>{formatCurrency(servico.preco_base)}</span>
                     </div>
-                    
+
                     {servico.detalhes && Object.keys(servico.detalhes).length > 0 && (
                       <div className="service-details">
                         <h4>Detalhes:</h4>
                         {servico.detalhes.inclui && (
-                          <div className="detail-item">
-                            <strong>Inclui:</strong> {servico.detalhes.inclui.join(', ')}
-                          </div>
+                          <div className="detail-item"><strong>Inclui:</strong> {servico.detalhes.inclui.join(', ')}</div>
                         )}
                         {servico.detalhes.prazo_entrega && (
-                          <div className="detail-item">
-                            <strong>Prazo:</strong> {servico.detalhes.prazo_entrega}
-                          </div>
+                          <div className="detail-item"><strong>Prazo:</strong> {servico.detalhes.prazo_entrega}</div>
                         )}
                         {servico.detalhes.garantia && (
-                          <div className="detail-item">
-                            <strong>Garantia:</strong> {servico.detalhes.garantia}
-                          </div>
+                          <div className="detail-item"><strong>Garantia:</strong> {servico.detalhes.garantia}</div>
                         )}
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="card-footer">
-                    <span className="card-date">
-                      Criado em {new Date(servico.data_criacao).toLocaleDateString('pt-BR')}
-                    </span>
-                    <span className={`status-badge ${servico.status}`}>
-                      {servico.status === 'ativo' ? 'Ativo' : 'Inativo'}
-                    </span>
+                    <span className="card-date">Criado em {new Date(servico.data_criacao).toLocaleDateString('pt-BR')}</span>
+                    <span className={`status-badge ${servico.status}`}>{servico.status === 'ativo' ? 'Ativo' : 'Inativo'}</span>
                   </div>
                 </div>
               );
@@ -260,90 +225,54 @@ const PortfolioServicos = ({ categoria = null }) => {
         )}
       </div>
 
-      {/* Modal de cadastro/edição */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
               <h2>{editingServico ? 'Editar Serviço' : 'Novo Serviço'}</h2>
-              <button 
-                className="modal-close"
-                onClick={() => {
-                  setShowModal(false);
-                  setEditingServico(null);
-                  setFormData({
-                    nome: '',
-                    descricao: '',
-                    preco_base: '',
-                    categoria: categoria || 'seo_sites',
-                    detalhes: {}
-                  });
-                }}
-              >
-                ✕
-              </button>
+              <button className="modal-close" onClick={() => {
+                setShowModal(false);
+                setEditingServico(null);
+                setFormData({
+                  nome: '',
+                  descricao: '',
+                  preco_base: '',
+                  categoria: categoria || 'seo_sites',
+                  detalhes: {},
+                  status: 'ativo'
+                });
+              }}>✕</button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">
               <div className="form-group">
                 <label className="form-label">Nome do Serviço *</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={formData.nome}
-                  onChange={(e) => setFormData({...formData, nome: e.target.value})}
-                  required
-                />
+                <input type="text" className="input" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} required />
               </div>
-              
+
               {!categoria && (
                 <div className="form-group">
                   <label className="form-label">Categoria *</label>
-                  <select
-                    className="select"
-                    value={formData.categoria}
-                    onChange={(e) => setFormData({...formData, categoria: e.target.value})}
-                    required
-                  >
+                  <select className="select" value={formData.categoria} onChange={(e) => setFormData({ ...formData, categoria: e.target.value })} required>
                     {categorias.map(cat => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.icon} {cat.label}
-                      </option>
+                      <option key={cat.value} value={cat.value}>{cat.icon} {cat.label}</option>
                     ))}
                   </select>
                 </div>
               )}
-              
+
               <div className="form-group">
                 <label className="form-label">Descrição</label>
-                <textarea
-                  className="input"
-                  value={formData.descricao}
-                  onChange={(e) => setFormData({...formData, descricao: e.target.value})}
-                  rows="4"
-                  placeholder="Descreva o serviço..."
-                />
+                <textarea className="input" value={formData.descricao} onChange={(e) => setFormData({ ...formData, descricao: e.target.value })} rows="4" placeholder="Descreva o serviço..." />
               </div>
-              
+
               <div className="form-group">
                 <label className="form-label">Preço Base (R$)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className="input"
-                  value={formData.preco_base}
-                  onChange={(e) => setFormData({...formData, preco_base: e.target.value})}
-                  placeholder="0,00"
-                />
+                <input type="number" step="0.01" min="0" className="input" value={formData.preco_base} onChange={(e) => setFormData({ ...formData, preco_base: e.target.value })} placeholder="0,00" />
               </div>
-              
+
               <div className="modal-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingServico ? 'Atualizar' : 'Cadastrar'}
-                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
+                <button type="submit" className="btn btn-primary">{editingServico ? 'Atualizar' : 'Cadastrar'}</button>
               </div>
             </form>
           </div>
@@ -354,4 +283,3 @@ const PortfolioServicos = ({ categoria = null }) => {
 };
 
 export default PortfolioServicos;
-

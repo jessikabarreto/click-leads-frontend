@@ -1,3 +1,31 @@
+/* Global reset (sugestão para evitar inconsistências) */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Animações */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Página */
 .page-container {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -166,6 +194,7 @@
   color: var(--text-tertiary);
 }
 
+/* Estado vazio */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -192,6 +221,7 @@
   margin-bottom: 24px;
 }
 
+/* Loading */
 .page-loading {
   display: flex;
   flex-direction: column;
@@ -210,29 +240,16 @@
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* Modal */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .modal {
@@ -337,7 +354,7 @@
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
-/* Status badges */
+/* Badges de status */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -381,27 +398,23 @@
     gap: 16px;
     align-items: stretch;
   }
-  
+
   .data-grid {
     grid-template-columns: 1fr;
     padding: 16px;
   }
-  
-  .page-stats {
-    grid-template-columns: 1fr;
-  }
-  
+
+  .page-stats,
   .filters-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .modal {
     width: 95%;
     margin: 20px;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
 }
-

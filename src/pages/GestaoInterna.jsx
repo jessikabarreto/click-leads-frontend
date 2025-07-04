@@ -50,7 +50,7 @@ const GestaoInterna = ({ categoria = null }) => {
     try {
       const endpoint = editingItem ? `/gestao-interna/${editingItem.id}` : '/gestao-interna';
       const method = editingItem ? 'PUT' : 'POST';
-      
+
       await apiRequest(endpoint, {
         method,
         body: JSON.stringify(formData),
@@ -198,20 +198,20 @@ const GestaoInterna = ({ categoria = null }) => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="card-content">
                     <div className="item-category">
                       <span className={`category-badge ${item.categoria}`}>
                         {catInfo.label}
                       </span>
                     </div>
-                    
+
                     {item.descricao && (
                       <div className="item-description">
                         {item.descricao}
                       </div>
                     )}
-                    
+
                     {item.configuracao && Object.keys(item.configuracao).length > 0 && (
                       <div className="item-config">
                         <h4>Configurações:</h4>
@@ -226,7 +226,7 @@ const GestaoInterna = ({ categoria = null }) => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="card-footer">
                     <span className="card-date">
                       Criado em {new Date(item.data_criacao).toLocaleDateString('pt-BR')}
@@ -242,7 +242,7 @@ const GestaoInterna = ({ categoria = null }) => {
         )}
       </div>
 
-      {/* Modal de cadastro/edição */}
+      {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -276,7 +276,7 @@ const GestaoInterna = ({ categoria = null }) => {
                   required
                 />
               </div>
-              
+
               {!categoria && (
                 <div className="form-group">
                   <label className="form-label">Categoria *</label>
@@ -294,7 +294,7 @@ const GestaoInterna = ({ categoria = null }) => {
                   </select>
                 </div>
               )}
-              
+
               <div className="form-group">
                 <label className="form-label">Descrição</label>
                 <textarea
@@ -305,7 +305,7 @@ const GestaoInterna = ({ categoria = null }) => {
                   placeholder="Descreva o item..."
                 />
               </div>
-              
+
               <div className="form-group">
                 <label className="form-label">Status</label>
                 <select
@@ -317,7 +317,7 @@ const GestaoInterna = ({ categoria = null }) => {
                   <option value="inativo">Inativo</option>
                 </select>
               </div>
-              
+
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                   Cancelar

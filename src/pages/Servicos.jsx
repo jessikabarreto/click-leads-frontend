@@ -35,7 +35,7 @@ const Servicos = () => {
     try {
       const url = editingServico ? `/api/servicos/${editingServico.id}` : '/api/servicos';
       const method = editingServico ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -48,14 +48,10 @@ const Servicos = () => {
       });
 
       if (response.ok) {
-        loadServicos();
+        await loadServicos();
         setShowModal(false);
         setEditingServico(null);
-        setFormData({
-          nome: '',
-          descricao: '',
-          preco_base: ''
-        });
+        setFormData({ nome: '', descricao: '', preco_base: '' });
       }
     } catch (error) {
       console.error('Erro ao salvar serviço:', error);
@@ -75,11 +71,9 @@ const Servicos = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este serviço?')) {
       try {
-        const response = await fetch(`/api/servicos/${id}`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(`/api/servicos/${id}`, { method: 'DELETE' });
         if (response.ok) {
-          loadServicos();
+          await loadServicos();
         } else {
           const error = await response.json();
           alert(error.error || 'Erro ao excluir serviço');
@@ -115,14 +109,9 @@ const Servicos = () => {
             <span className="page-icon">⚙️</span>
             Gestão de Serviços
           </h1>
-          <p className="page-subtitle">
-            Configure os serviços oferecidos pela sua agência
-          </p>
+          <p className="page-subtitle">Configure os serviços oferecidos pela sua agência</p>
         </div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowModal(true)}
-        >
+        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
           <span>+</span>
           Novo Serviço
         </button>
@@ -140,7 +129,7 @@ const Servicos = () => {
         <div className="stat-item">
           <span className="stat-number">
             {formatCurrency(
-              servicos.reduce((sum, s) => sum + (s.preco_base || 0), 0) / servicos.length
+              servicos.reduce((sum, s) => sum + (s.preco_base || 0), 0) / (servicos.length || 1)
             )}
           </span>
           <span className="stat-label">Preço Médio</span>
@@ -153,10 +142,7 @@ const Servicos = () => {
             <div className="empty-icon">⚙️</div>
             <h3>Nenhum serviço cadastrado</h3>
             <p>Comece adicionando os serviços da sua agência</p>
-            <button 
-              className="btn btn-primary"
-              onClick={() => setShowModal(true)}
-            >
+            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
               Adicionar Serviço
             </button>
           </div>
@@ -167,18 +153,10 @@ const Servicos = () => {
                 <div className="card-header">
                   <h3 className="card-title">{servico.nome}</h3>
                   <div className="card-actions">
-                    <button 
-                      className="btn-icon"
-                      onClick={() => handleEdit(servico)}
-                      title="Editar"
-                    >
+                    <button className="btn-icon" onClick={() => handleEdit(servico)} title="Editar">
                       ✏️
                     </button>
-                    <button 
-                      className="btn-icon"
-                      onClick={() => handleDelete(servico.id)}
-                      title="Excluir"
-                    >
+                    <button className="btn-icon" onClick={() => handleDelete(servico.id)} title="Excluir">
                       🗑️
                     </button>
                   </div>
@@ -187,17 +165,12 @@ const Servicos = () => {
                   {servico.descricao && (
                     <div className="info-item" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                       <span className="info-label">Descrição:</span>
-                      <span className="info-value" style={{ marginTop: '4px' }}>
-                        {servico.descricao}
-                      </span>
+                      <span className="info-value" style={{ marginTop: '4px' }}>{servico.descricao}</span>
                     </div>
                   )}
                   <div className="info-item">
                     <span className="info-label">Preço Base:</span>
-                    <span className="info-value" style={{ 
-                      fontWeight: '600', 
-                      color: servico.preco_base ? 'var(--success-color)' : 'var(--text-tertiary)' 
-                    }}>
+                    <span className="info-value" style={{ fontWeight: '600', color: servico.preco_base ? 'var(--success-color)' : 'var(--text-tertiary)' }}>
                       {formatCurrency(servico.preco_base)}
                     </span>
                   </div>
@@ -213,26 +186,16 @@ const Servicos = () => {
         )}
       </div>
 
-      {/* Modal de cadastro/edição */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
               <h2>{editingServico ? 'Editar Serviço' : 'Novo Serviço'}</h2>
-              <button 
-                className="modal-close"
-                onClick={() => {
-                  setShowModal(false);
-                  setEditingServico(null);
-                  setFormData({
-                    nome: '',
-                    descricao: '',
-                    preco_base: ''
-                  });
-                }}
-              >
-                ✕
-              </button>
+              <button className="modal-close" onClick={() => {
+                setShowModal(false);
+                setEditingServico(null);
+                setFormData({ nome: '', descricao: '', preco_base: '' });
+              }}>✕</button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">
               <div className="form-group">
@@ -241,7 +204,7 @@ const Servicos = () => {
                   type="text"
                   className="input"
                   value={formData.nome}
-                  onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                   placeholder="Ex: SEO Sites, Google Perfis..."
                   required
                 />
@@ -251,7 +214,7 @@ const Servicos = () => {
                 <textarea
                   className="input"
                   value={formData.descricao}
-                  onChange={(e) => setFormData({...formData, descricao: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                   placeholder="Descreva o que este serviço inclui..."
                   rows="4"
                 />
@@ -264,7 +227,7 @@ const Servicos = () => {
                   min="0"
                   className="input"
                   value={formData.preco_base}
-                  onChange={(e) => setFormData({...formData, preco_base: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, preco_base: e.target.value })}
                   placeholder="0,00"
                 />
                 <small style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', marginTop: '4px' }}>
@@ -288,4 +251,3 @@ const Servicos = () => {
 };
 
 export default Servicos;
-
